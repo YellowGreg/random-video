@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      background-color: #252525;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Style for the container of the embedded video */
+    .random-video-container {
+      width: 80%;
+      max-width: 800px;
+      margin: 20px;
+      overflow: hidden;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Style for the embedded iframe */
+    .random-video-embed {
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%;
+      border: none;
+      transition: transform 0.3s ease;
+    }
+
+    /* Style for the video title */
+    .random-video-title {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    /* Style for the button container */
+    .button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    /* Style for the button */
+    .randomButton {
+      background-color: #ff6347;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .randomButton:hover {
+      background-color: #ff512f;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="random-video-container">
+    <iframe class="random-video-embed" src="" frameborder="0" allowfullscreen></iframe>
+  </div>
+  <p class="random-video-title">Video Title</p>
+  <div class="button-container">
+    <button class="randomButton">Get Random Video</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    const randomButton = document.querySelector(".randomButton");
+    const randomVideoEmbed = document.querySelector(".random-video-embed");
+    const randomVideoTitle = document.querySelector(".random-video-title");
+
+    randomButton.addEventListener("click", loadRandomVideo);
+
+    function loadRandomVideo() {
+      axios.get("https://lust.scathach.id/xvideos/random")
+        .then(response => {
+          const data = response.data;
+          if (data.success && data.data) {
+            const embedUrl = data.assets[0];
+            if (embedUrl) {
+              randomVideoEmbed.src = embedUrl;
+              randomVideoTitle.textContent = data.data.title || "No title available";
+              randomVideoEmbed.style.height = "100%"; 
+              randomVideoEmbed.style.transform = "scale(1)";
+            }
+          }
+        })
+        .catch(error => {
+          console.error("API request error:", error);
+        });
+    }
+  </script>
+</body>
+
+</html>
