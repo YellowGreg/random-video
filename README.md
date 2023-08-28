@@ -1,5 +1,5 @@
 # Generate-Xvideo
-Generates Naught Video with a API
+Generates Naughty Video with a API
 
 # Api
 
