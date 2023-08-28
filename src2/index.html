@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      background-color: #1f1f1f;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Style for the container of the embedded video */
+    .random-video-container {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      margin: 20px 0;
+    }
+
+    /* Style for the embedded iframe */
+    .random-video-embed {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Style for the video title */
+    .random-video-title {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    /* Style for the counter */
+    .loading-counter {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    /* Style for the button */
+    .randomButton {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* Style for the load more button */
+    .loadMoreButton {
+      background-color: #2196f3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="videoContainer"></div>
+  <button class="randomButton">Get Random Videos</button>
+  <button class="loadMoreButton">Load More Videos</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    const videoContainer = document.getElementById("videoContainer");
+    const randomButton = document.querySelector(".randomButton");
+    const loadMoreButton = document.querySelector(".loadMoreButton");
+
+    let videosLoaded = 0;
+
+    randomButton.addEventListener("click", loadRandomVideos);
+    loadMoreButton.addEventListener("click", loadRandomVideos);
+
+    function loadRandomVideos() {
+      for (let i = 0; i < 4; i++) {
+        axios.get("https://lust.scathach.id/xvideos/random")
+          .then(response => {
+            const data = response.data;
+            if (data.success && data.data) {
+              const embedUrl = data.assets[0];
+              if (embedUrl) {
+                const videoDiv = document.createElement("div");
+                videoDiv.classList.add("random-video-container");
+
+                const randomVideoEmbed = document.createElement("iframe");
+                randomVideoEmbed.classList.add("random-video-embed");
+                randomVideoEmbed.src = embedUrl;
+                randomVideoEmbed.frameBorder = "0";
+                randomVideoEmbed.allowFullscreen = true;
+
+                const randomVideoTitle = document.createElement("p");
+                randomVideoTitle.classList.add("random-video-title");
+                randomVideoTitle.textContent = data.data.title || "No title available";
+
+                videoDiv.appendChild(randomVideoEmbed);
+                videoDiv.appendChild(randomVideoTitle);
+                videoContainer.appendChild(videoDiv);
+              }
+            }
+          })
+          .catch(error => {
+            console.error("API request error:", error);
+          });
+
+        videosLoaded++;
+        if (videosLoaded >= 8) {
+          loadMoreButton.style.display = "none";
+          break;
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
