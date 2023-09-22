@@ -13,4 +13,4 @@ https://github.com/YellowGreg/Generate-Xvideo/assets/101320329/52728c75-fa55-421
 
 
 ## Contribute
-- you can contribute if you want fork it and make some changes this is a little cool project i made thats all.
+- you can contribute if you want, just fork it and make some changes thats all, and this is alittle cool project i made thats all.
