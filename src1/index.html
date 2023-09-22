@@ -84,7 +84,7 @@
     randomButton.addEventListener("click", loadRandomVideo);
 
     function loadRandomVideo() {
-      axios.get("https://lust.scathach.id/xvideos/random")
+      axios.get("https://lust.scathach.id/redtube/random")
         .then(response => {
           const data = response.data;
           if (data.success && data.data) {
