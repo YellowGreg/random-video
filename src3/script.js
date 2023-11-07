@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadRandomVideosButton.addEventListener("click", loadRandomVideos);
 
   async function loadRandomVideos() {
-    loadRandomVideosButton.disabled = true; // Disable the button during the request
+    loadRandomVideosButton.disabled = true; 
 
     try {
       for (let i = 0; i < randomVideoEmbeds.length; i++) {
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       handleLoadError(`API request error: ${error.message}`);
     } finally {
-      loadRandomVideosButton.disabled = false; // Re-enable the button after the request
+      loadRandomVideosButton.disabled = false; 
     }
   }
 
@@ -39,6 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.appendChild(errorContainer);
     setTimeout(() => {
       errorContainer.remove();
-    }, 5000); // Remove the error message after 5 seconds
+    }, 5000); 
   }
 });
