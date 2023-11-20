@@ -3,7 +3,9 @@ Generates Naughty Video with a API
 
 # Api
 
-[The Api](https://github.com/sinkaroid/lustpress)
+[Lustpress](https://github.com/sinkaroid/lustpress)
+
+[Rule34.xxx](https://api.rule34.xxx/)
 
 ## Video 
 
@@ -14,3 +16,6 @@ https://github.com/YellowGreg/Generate-Xvideo/assets/101320329/52728c75-fa55-421
 
 ## Contribute
 - you can contribute if you want, just fork it and make some changes thats all, and this is alittle cool project i made thats all.
+
+
+
