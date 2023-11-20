@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 20px;
+      background-color: #f0f0f0;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin: 20px 0 5px 0;
+    }
+
+    input,
+    select,
+    button {
+      padding: 10px;
+      margin-bottom: 15px;
+      width: calc(100% - 20px);
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      transition: border-color 0.3s ease;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      overflow: hidden;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .tag {
+      display: inline-block;
+      background-color: #4CAF50;
+      color: white;
+      padding: 5px 10px;
+      margin: 5px;
+      border-radius: 15px;
+    }
+
+    .tag:hover {
+      background-color: #45a049;
+    }
+
+    .media-container {
+      max-width: 100%;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+
+    .media-container img,
+    .media-container video {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 400px;
+      margin: 0 auto;
+      border-radius: 5px;
+      transition: transform 0.3s ease;
+    }
+
+    .media-container:hover img,
+    .media-container:hover video {
+      transform: scale(1.1);
+    }
+
+    .warning {
+      color: #FF0000;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Search</h1>
+
+  <label for="tags">Tags (comma-separated):</label>
+  <input type="text" id="tags" placeholder="Enter tags" onkeypress="handleKeyPress(event)">
+
+  <label for="limit">Limit:</label>
+  <input type="number" id="limit" placeholder="Enter limit" onkeypress="handleKeyPress(event)">
+
+  <label for="page">Page:</label>
+  <input type="number" id="page" placeholder="Enter page number" onkeypress="handleKeyPress(event)">
+
+  <button onclick="searchAPI()">Search</button>
+
+  <div id="result"></div>
+
+  <div id="warning" class="warning"></div>
+  <script>
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        searchAPI();
+      }
+    }
+
+    function searchAPI() {
+      const tags = encodeURIComponent(document.getElementById('tags').value.replace(/\s/g, '').split(',').join(' '));
+      const limit = encodeURIComponent(document.getElementById('limit').value);
+      const page = encodeURIComponent(document.getElementById('page').value);
+
+      let apiUrl = `https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&tags=${tags}&json=1`;
+
+      if (limit) {
+        apiUrl += `&limit=${limit}`;
+      }
+
+      if (page) {
+        apiUrl += `&pid=${page}`;
+      }
+
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          if (data.success === false) {
+            document.getElementById('result').innerHTML = `<p>Error: ${data.message}</p>`;
+          } else {
+            displayResults(data, page);
+            showWarning(data[0]?.change_id, page);
+          }
+        })
+        .catch(error => {
+          document.getElementById('result').innerHTML = `<p>Error: ${error.message}</p>`;
+        });
+    }
+
+    function displayResults(data, currentPage) {
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = "";
+
+        data.forEach(item => {
+            const isSourceValid = item.source && /^(http|https):\/\/[^ "]+$/.test(item.source);
+            const isGif = item.file_url.endsWith('.gif'); 
+
+            const mediaElement = isGif
+                ? isSourceValid
+                    ? `<div class="media-container"><a href="${item.source}" target="_blank" rel="noopener noreferrer"><img loading="lazy" src="${item.file_url}" alt="Result GIF"></a></div>`
+                    : `<div class="media-container"><img loading="lazy" src="${item.file_url}" alt="Result GIF"></div>`
+                : item.file_url.endsWith('.webm')
+                    ? isSourceValid
+                        ? `<div class="media-container"><a href="${item.source}" target="_blank" rel="noopener noreferrer"><video controls><source src="${item.file_url}" type="video/webm"></video></a></div>`
+                        : `<div class="media-container"><video controls><source src="${item.file_url}" type="video/webm"></video></div>`
+                    : isSourceValid
+                        ? `<div class="media-container"><a href="${item.source}" target="_blank" rel="noopener noreferrer"><img loading="lazy" src="${item.file_url}" alt="${item.file_url.endsWith('.webm') ? 'Result Video' : 'Result Image'}"></a></div>`
+                        : `<div class="media-container"><img loading="lazy" src="${item.file_url}" alt="${item.file_url.endsWith('.webm') ? 'Result Video' : 'Result Image'}"></div>`;
+
+            const postDiv = document.createElement('div');
+            postDiv.innerHTML = `
+                <h3>${item.id}</h3>
+                ${item.tags.split(' ').map(tag => `<span class="tag">${tag}</span>`).join(' ')}
+                <p>${item.tags}</p>
+                ${mediaElement}
+                <hr>
+            `;
+            resultDiv.appendChild(postDiv);
+
+            console.log("Original Source URL:", item.source);
+        });
+    }
+
+    function showWarning(totalPages, currentPage) {
+      const warningDiv = document.getElementById('warning');
+      warningDiv.innerHTML = "";
+
+      if (totalPages !== undefined) {
+        const remainingPages = totalPages - currentPage;
+
+        if (remainingPages <= 5 && remainingPages > 0) {
+          warningDiv.innerHTML = `<p class="warning">Warning: You have reached ${currentPage} out of ${totalPages} pages. Consider refining your search or increasing the limit.</p>`;
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
