@@ -1,11 +1,13 @@
 # Generate-Xvideo
 Generates Naughty Video with a API
 
+**NOTE: Video won't work just press the error thumbnail to go to the video i don't know if i will fix the problem, because im to busy**
+
 # Api
 
-[Lustpress](https://github.com/sinkaroid/lustpress)
+[Lustpress](https://github.com/sinkaroid/lustpress) - Api for `Video` only
 
-[Rule34.xxx](https://api.rule34.xxx/)
+[Rule34.xxx](https://api.rule34.xxx/) - Api for `Image`, `Gif`, `Video`
 
 ## Video 
 
