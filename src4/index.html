@@ -102,7 +102,6 @@
 </head>
 
 <body>
-
   <h1>Search</h1>
 
   <label for="tags">Tags (comma-separated):</label>
@@ -117,8 +116,8 @@
   <button onclick="searchAPI()">Search</button>
 
   <div id="result"></div>
-
   <div id="warning" class="warning"></div>
+
   <script>
     function handleKeyPress(event) {
       if (event.key === 'Enter') {
@@ -157,37 +156,37 @@
     }
 
     function displayResults(data, currentPage) {
-        const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = "";
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = "";
 
-        data.forEach(item => {
-            const isSourceValid = item.source && /^(http|https):\/\/[^ "]+$/.test(item.source);
-            const isGif = item.file_url.endsWith('.gif'); 
+      data.forEach(item => {
+        const isSourceValid = item.source && /^(http|https):\/\/[^ "]+$/.test(item.source);
+        const isGif = item.file_url.endsWith('.gif');
 
-            const mediaElement = isGif
-                ? isSourceValid
-                    ? `<div class="media-container"><a href="${item.source}" target="_blank" rel="noopener noreferrer"><img loading="lazy" src="${item.file_url}" alt="Result GIF"></a></div>`
-                    : `<div class="media-container"><img loading="lazy" src="${item.file_url}" alt="Result GIF"></div>`
-                : item.file_url.endsWith('.webm')
-                    ? isSourceValid
-                        ? `<div class="media-container"><a href="${item.source}" target="_blank" rel="noopener noreferrer"><video controls><source src="${item.file_url}" type="video/webm"></video></a></div>`
-                        : `<div class="media-container"><video controls><source src="${item.file_url}" type="video/webm"></video></div>`
-                    : isSourceValid
-                        ? `<div class="media-container"><a href="${item.source}" target="_blank" rel="noopener noreferrer"><img loading="lazy" src="${item.file_url}" alt="${item.file_url.endsWith('.webm') ? 'Result Video' : 'Result Image'}"></a></div>`
-                        : `<div class="media-container"><img loading="lazy" src="${item.file_url}" alt="${item.file_url.endsWith('.webm') ? 'Result Video' : 'Result Image'}"></div>`;
+        const mediaElement = isGif
+          ? isSourceValid
+            ? `<div class="media-container"><a href="${item.source}" target="_blank" rel="noopener noreferrer"><img loading="lazy" src="${item.file_url}" alt="Result GIF"></a></div>`
+            : `<div class="media-container"><img loading="lazy" src="${item.file_url}" alt="Result GIF"></div>`
+          : item.file_url.endsWith('.webm')
+            ? isSourceValid
+              ? `<div class="media-container"><a href="${item.source}" target="_blank" rel="noopener noreferrer"><video controls><source src="${item.file_url}" type="video/webm"></video></a></div>`
+              : `<div class="media-container"><video controls><source src="${item.file_url}" type="video/webm"></video></div>`
+            : isSourceValid
+              ? `<div class="media-container"><a href="${item.source}" target="_blank" rel="noopener noreferrer"><img loading="lazy" src="${item.file_url}" alt="${item.file_url.endsWith('.webm') ? 'Result Video' : 'Result Image'}"></a></div>`
+              : `<div class="media-container"><img loading="lazy" src="${item.file_url}" alt="${item.file_url.endsWith('.webm') ? 'Result Video' : 'Result Image'}"></div>`;
 
-            const postDiv = document.createElement('div');
-            postDiv.innerHTML = `
+        const postDiv = document.createElement('div');
+        postDiv.innerHTML = `
                 <h3>${item.id}</h3>
                 ${item.tags.split(' ').map(tag => `<span class="tag">${tag}</span>`).join(' ')}
                 <p>${item.tags}</p>
                 ${mediaElement}
                 <hr>
             `;
-            resultDiv.appendChild(postDiv);
+        resultDiv.appendChild(postDiv);
 
-            console.log("Original Source URL:", item.source);
-        });
+        console.log("Original Source URL:", item.source);
+      });
     }
 
     function showWarning(totalPages, currentPage) {
